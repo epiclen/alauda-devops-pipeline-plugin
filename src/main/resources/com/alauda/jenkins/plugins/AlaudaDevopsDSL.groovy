@@ -375,6 +375,31 @@ class AlaudaDevopsDSL implements Serializable {
         return result;
     }
 
+    /**
+     *
+     * @param commands
+     * @param jmxPath
+     * @return
+     */
+    @Whitelisted
+    public String processJMeterCommand(String commands, String jmxPath) {
+        String result = commands;
+        StringBuilder sb = new StringBuilder();
+        String[] commandSplitByLine = commands.split("\n");
+        for (int i = 0; i < commandSplitByLine.length; i++) {
+            if (commandSplitByLine[i].indexOf("jmeter") != -1) {
+                if (commandSplitByLine[i].indexOf("-t") == -1) {
+                    commandSplitByLine[i] = commandSplitByLine[i].substring(0, commandSplitByLine[i].lastIndexOf(commandSplitByLine[i].trim())+commandSplitByLine[i].trim().length());
+                    commandSplitByLine[i] += " -t " + jmxPath;
+                }
+            }
+            sb.append(commandSplitByLine[i]).append("\n");
+        }
+        result = sb.toString();
+
+        return result;
+    }
+
 
     /**
      * @param name The name can be a literal URL for the clusterName or,
